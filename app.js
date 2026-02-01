@@ -30,10 +30,10 @@ function updateUIForSelection() {
         heightInput.value = rect.h;
         colorInput.value = rect.color;
         labelInput.value = rect.label || '';
-        controlsTitle.innerText = `Rechteck #${rect.id} bearbeiten`;
+        controlsTitle.innerText = `Palette #${rect.id} bearbeiten`;
         deleteBtn.style.display = 'block';
     } else {
-        controlsTitle.innerText = 'Neues Rechteck';
+        controlsTitle.innerText = 'Neue Palette';
         deleteBtn.style.display = 'none';
         // Optional: Reset inputs to defaults if desired
     }
@@ -129,8 +129,8 @@ function draw() {
     ctx.font = '12px Outfit';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText(`${areaW}px`, AREA_OFFSET_X + areaW + 8, AREA_OFFSET_Y + 4);
-    ctx.fillText(`${areaH}px`, AREA_OFFSET_X + 4, AREA_OFFSET_Y + areaH + 8);
+    ctx.fillText(`${areaW} cm`, AREA_OFFSET_X + areaW + 8, AREA_OFFSET_Y + 4);
+    ctx.fillText(`${areaH} cm`, AREA_OFFSET_X + 4, AREA_OFFSET_Y + areaH + 8);
     ctx.fillText("0,0", AREA_OFFSET_X - 25, AREA_OFFSET_Y - 15);
 
     rectangles.forEach((rect, index) => {
@@ -176,7 +176,19 @@ function draw() {
             ctx.font = '600 14px Outfit, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(rect.label, vx + rect.w / 2, vy + rect.h / 2);
+            ctx.fillText(rect.label, vx + rect.w / 2, vy + rect.h / 2 - 10); // Shifted up slightly
+
+            // Draw Dimensions (Breite x Höhe)
+            ctx.font = '400 12px Outfit, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillText(`${rect.w} x ${rect.h}`, vx + rect.w / 2, vy + rect.h / 2 + 10);
+        } else {
+            // Only draw dimensions if no label
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.font = '400 12px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${rect.w} x ${rect.h}`, vx + rect.w / 2, vy + rect.h / 2);
         }
     });
 }
@@ -295,6 +307,64 @@ window.addEventListener('mouseup', () => {
     draggedRectIndex = null;
     draw();
 });
+
+// Rotation with Mouse Wheel
+canvas.addEventListener('wheel', (e) => {
+    e.preventDefault(); // Prevent page scroll
+
+    // Find rectangle under mouse
+    const pos = getMousePos(e);
+    let targetIdx = null;
+
+    // Check from top to bottom
+    for (let i = rectangles.length - 1; i >= 0; i--) {
+        if (isPointInRect(pos.x, pos.y, rectangles[i])) {
+            targetIdx = i;
+            break;
+        }
+    }
+
+    // If no specific rect under mouse, try the selected one
+    if (targetIdx === null && selectedRectIndex !== null) {
+        targetIdx = selectedRectIndex;
+    }
+
+    if (targetIdx !== null) {
+        const rect = rectangles[targetIdx];
+        const areaW = parseInt(areaWidthInput.value) || 1000;
+        const areaH = parseInt(areaHeightInput.value) || 800;
+
+        const oldW = rect.w;
+        const oldH = rect.h;
+
+        // Perform rotation (swap W and H)
+        rect.w = oldH;
+        rect.h = oldW;
+
+        // Re-check boundaries (Rotation might push it out of area)
+        // Adjust position if it would go out of area (try to keep it inside)
+        rect.x = Math.max(0, Math.min(rect.x, areaW - rect.w));
+        rect.y = Math.max(0, Math.min(rect.y, areaH - rect.h));
+
+        // Check collisions with all OTHER rectangles
+        const hasCollision = rectangles.some((other, idx) => {
+            if (idx === targetIdx) return false;
+            return checkCollision(rect, other);
+        });
+
+        if (hasCollision) {
+            // Revert rotation if it collides
+            rect.w = oldW;
+            rect.h = oldH;
+        } else {
+            // If it was selected, update Sidebar UI
+            if (targetIdx === selectedRectIndex) {
+                updateUIForSelection();
+            }
+        }
+        draw();
+    }
+}, { passive: false });
 
 deleteBtn.addEventListener('click', () => {
     if (selectedRectIndex !== null) {

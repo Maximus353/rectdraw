@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CargoLoad2 - Optimal Rectangle Packing</title>
+    <title>Interaktiver Paletten-Planer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,82 +12,67 @@
 </head>
 
 <body>
-    <div class="background-decor">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>Rect<span>Draw</span></h1>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <h2 id="controls-title" style="font-size: 1rem; color: var(--accent-color); margin-bottom: 0.5rem;">
+                        Neue Palette</h2>
+                    <label>Lademeter (cm)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="area-width" value="1340" min="100" max="2000" style="width: 50%;">
+                        <input type="number" id="area-height" value="245" min="100" max="500" style="width: 50%;">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-width">Breite (cm)</label>
+                    <input type="number" id="rect-width" value="120" min="10" max="500">
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-height">Höhe (cm)</label>
+                    <input type="number" id="rect-height" value="80" min="10" max="500">
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-label">Kenner</label>
+                    <input type="text" id="rect-label" placeholder="Text eingeben..." maxlength="20">
+                </div>
+
+
+
+                <div class="control-group">
+                    <label for="rect-color">Farbe</label>
+                    <input type="color" id="rect-color" value="#3b82f6">
+                </div>
+
+                <div class="control-group checkbox-group">
+                    <input type="checkbox" id="random-color">
+                    <label for="random-color">Zufallsfarbe</label>
+                </div>
+
+                <button id="delete-btn" class="secondary-btn"
+                    style="display: none; background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444;">Auswahl
+                    löschen</button>
+                <button id="clear-btn" class="secondary-btn">Alles Löschen</button>
+            </div>
+
+            <div class="instructions">
+                <p>Klicke auf die Fläche, um eine Palette zu zeichnen.</p>
+                <p>Du kannst Paletten auswählen und verschieben.</p>
+            </div>
+        </aside>
+
+        <main class="canvas-area">
+            <canvas id="main-canvas"></canvas>
+        </main>
     </div>
-
-    <main class="container">
-        <header>
-            <h1>CargoLoad2</h1>
-            <p>Optimale Rechteck-Verteilung in Echtzeit</p>
-        </header>
-
-        <section class="controls glass">
-            <div class="control-group">
-                <h3>Raummaße</h3>
-                <div class="input-row">
-                    <div class="input-field">
-                        <label for="roomWidth">Länge (cm)</label>
-                        <input type="number" id="roomWidth" value="1360" min="10">
-                    </div>
-                    <div class="input-field">
-                        <label for="roomHeight">Breite (cm)</label>
-                        <input type="number" id="roomHeight" value="240" min="10">
-                    </div>
-                    <div class="input-field checkbox-field">
-                        <label for="lockRatio">Aspect Ratio sperren</label>
-                        <input type="checkbox" id="lockRatio" style="width: auto;">
-                    </div>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <h3>Rechtecke hinzufügen</h3>
-                <div class="input-row">
-                    <div class="input-field">
-                        <label for="rectWidth">Länge (cm)</label>
-                        <input type="number" id="rectWidth" value="120" min="1">
-                    </div>
-                    <div class="input-field">
-                        <label for="rectHeight">Breite (cm)</label>
-                        <input type="number" id="rectHeight" value="80" min="1">
-                    </div>
-                    <div class="input-field">
-                        <label for="rectLabel">Bezeichnung</label>
-                        <input type="text" id="rectLabel" placeholder="Optionale Label">
-                    </div>
-                    <div class="input-field">
-                        <label for="rectCount">Anzahl</label>
-                        <input type="number" id="rectCount" value="1" min="1">
-                    </div>
-                    <button id="addRect" class="btn-primary">Hinzufügen</button>
-                </div>
-            </div>
-
-            <div class="rect-list" id="rectList">
-                <!-- Dynamisch hinzugefügte Rechtecke -->
-            </div>
-
-            <div class="actions">
-                <button id="clearAll" class="btn-secondary">Alles löschen</button>
-                <button id="packAll" class="btn-accent">Optimal verteilen</button>
-            </div>
-        </section>
-
-        <section class="visualizer glass">
-            <div class="canvas-container">
-                <canvas id="canvas"></canvas>
-            </div>
-            <div class="stats" id="stats">
-                Verschwendung: <span id="wasteValue">0</span>% | Platziert: <span id="placedCount">0</span>/<span
-                    id="totalCount">0</span>
-            </div>
-        </section>
-    </main>
-
-    <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
