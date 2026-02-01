@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktiver Rechteck-Zeichner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>Rect<span>Draw</span></h1>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <h2 id="controls-title" style="font-size: 1rem; color: var(--accent-color); margin-bottom: 0.5rem;">
+                        Neues Rechteck</h2>
+                    <label>Flächengröße (px)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="area-width" value="1000" min="100" max="5000" style="width: 50%;">
+                        <input type="number" id="area-height" value="800" min="100" max="5000" style="width: 50%;">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-width">Breite (px)</label>
+                    <input type="number" id="rect-width" value="100" min="10" max="500">
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-height">Höhe (px)</label>
+                    <input type="number" id="rect-height" value="100" min="10" max="500">
+                </div>
+
+                <div class="control-group">
+                    <label for="rect-label">Kenner</label>
+                    <input type="text" id="rect-label" placeholder="Text eingeben..." maxlength="20">
+                </div>
+
+
+
+                <div class="control-group">
+                    <label for="rect-color">Farbe</label>
+                    <input type="color" id="rect-color" value="#3b82f6">
+                </div>
+
+                <div class="control-group checkbox-group">
+                    <input type="checkbox" id="random-color">
+                    <label for="random-color">Zufallsfarbe</label>
+                </div>
+
+                <button id="delete-btn" class="secondary-btn"
+                    style="display: none; background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444;">Auswahl
+                    löschen</button>
+                <button id="clear-btn" class="secondary-btn">Alles Löschen</button>
+            </div>
+
+            <div class="instructions">
+                <p>Klicke auf die Fläche, um ein Rechteck zu zeichnen.</p>
+                <p>Du kannst Rechtecke auswählen und verschieben.</p>
+            </div>
+        </aside>
+
+        <main class="canvas-area">
+            <canvas id="main-canvas"></canvas>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
